@@ -1,0 +1,18 @@
+Enthymeme: The weather channel is in a position to know about the weather.   Context: The user has a doctor's appointment on Friday.
+Enthymeme: The weatherman knows about the weather.   Context: The user lives in Philadelphia.
+Enthymeme: The approach of hurricanes is a matter of meteorology.   Context: The user lives in Miami.
+Enthymeme: The weatherman knows about the weather.   Context: The user plans to go to the gym in the next few hours.
+Enthymeme: The weatherman knows about the weather.   Context: The user lives in Naples.
+Enthymeme: The weatherman knows about the weather.   Context: The user plans on going on a trip on Saturday.
+Enthymeme: The weatherman knows about the weather.   Context: The user lives in London.
+Enthymeme: The weatherman knows about the weather.   Context: The user has an appointment in Westminster on Friday.
+Enthymeme: The weatherman knows about the weather.   Context: The user plans to go to a party in Green Bay around midnight. 
+Enthymeme: The weatherman knows about the weather.   Context: The user lives in Fremont.
+Enthymeme: The weatherman knows about the weather.   Context: The user lives in Indiana.
+Enthymeme: The weatherman knows about the weather.   Context: The user lives in Minneapolis. The user plans to go for a walk at night within the next hour.
+Enthymeme: The weatherman knows about the weather.   Context: The user lives in Indianapolis. The user has a doctor's appointment in the next hour.
+Enthymeme: The weatherman knows about the weather.   Context: All of the user's electrical devices are plugged into the outlets.
+Enthymeme: The weatherman knows about the weather.   Context: The user’s patio umbrella is open outside the house.
+Enthymeme: The weatherman knows about the weather.   Context: The user lives in Lafayette.
+Enthymeme: The weatherman knows about the weather.   Context: The user has an appointment tomorrow at 11 A.M.
+Enthymeme: The weatherman knows about the weather.   Context: The user lives in Delta. The user plans to go to Manti in the next hour.

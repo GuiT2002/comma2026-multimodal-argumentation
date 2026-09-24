@@ -1,0 +1,36 @@
+﻿Test,Image,gemini-3.8-flash,deepSeek-flash
+"Enthymeme: The weather channel is in a position to know about the weather.   Context: The user has a doctor's appointment on Friday.
+",,,"[position_to_know(weather_channel,weather),asserts(weather_channel,weather(friday,partly_cloudy)),contain(weather,weather(friday,partly_cloudy))],weather(friday,partly_cloudy)"
+"Enthymeme: The weatherman knows about the weather.   Context: The user lives in Philadelphia.
+",,,"[position_to_know(weatherman,weather),asserts(weatherman,cold_front(philadelphia)),contain(weather,cold_front(philadelphia))],cold_front(philadelphia)"
+"Enthymeme: The approach of hurricanes is a matter of meteorology.   Context: The user lives in Miami.
+",,,"[position_to_know(tv_meteorologist,meteorology),asserts(tv_meteorologist,approach(hurricane_kyle,miami)),contain(meteorology,approach(hurricane_kyle,miami))],approach(hurricane_kyle,miami)"
+"Enthymeme: The weatherman knows about the weather.   Context: The user plans to go to the gym in the next few hours.
+",,,"[position_to_know(weatherman, weather), asserts(weatherman, occurred(extreme_rain_event, earlier_this_week)), contain(weather, occurred(extreme_rain_event, earlier_this_week))], occurred(extreme_rain_event, earlier_this_week)"
+"Enthymeme: The weatherman knows about the weather.   Context: The user lives in Naples.
+",,,"[position_to_know(weatherman,weather),asserts(weatherman,temperature(naples,91)),contain(weather,temperature(naples,91))],temperature(naples,91)"
+"Enthymeme: The weatherman knows about the weather.   Context: The user plans on going on a trip on Saturday.
+",,,"[position_to_know(weatherman,weather),asserts(weatherman,rainy(saturday)),contain(weather,rainy(saturday))],rainy(saturday)"
+"Enthymeme: The weatherman knows about the weather.   Context: The user lives in London.
+",,,"[position_to_know(weatherman,weather),asserts(weatherman,temperature(london,38)),contain(weather,temperature(london,38))],temperature(london,38)"
+"Enthymeme: The weatherman knows about the weather.   Context: The user has an appointment in Westminster on Friday.
+",,,"[position_to_know(weatherman, weather), asserts(weatherman, will_rain(westminster, friday)), contain(weather, will_rain(westminster, friday))], will_rain(westminster, friday)"
+"Enthymeme: The weatherman knows about the weather.   Context: The user plans to go to a party in Green Bay around midnight. 
+",,,"[position_to_know(weatherman, weather), asserts(weatherman, storms(green_bay, midnight)), contain(weather, storms(green_bay, midnight))], storms(green_bay, midnight)"
+"Enthymeme: The weatherman knows about the weather.   Context: The user lives in Fremont.
+",,,"[position_to_know(weatherman,weather),asserts(weatherman,temperature(fremont,85,tuesday_12pm)),contain(weather,temperature(fremont,85,tuesday_12pm))],temperature(fremont,85,tuesday_12pm)"
+"Enthymeme: The weatherman knows about the weather.   Context: The user lives in Indiana.
+",,,"[position_to_know(weatherman, weather), asserts(weatherman, moderate_risk_of_severe_weather(indiana)), contain(weather, moderate_risk_of_severe_weather(indiana))], moderate_risk_of_severe_weather(indiana)"
+"Enthymeme: The weatherman knows about the weather.   Context: The user lives in Minneapolis. The user plans to go for a walk at night within the next hour.
+",,,"[position_to_know(weatherman,weather),asserts(weatherman,will_rain(minneapolis,within_next_hour)),contain(weather,will_rain(minneapolis,within_next_hour))],will_rain(minneapolis,within_next_hour)"
+"Enthymeme: The weatherman knows about the weather.   Context: The user lives in Indianapolis. The user has a doctor's appointment in the next hour.
+",,,"[position_to_know(weatherman, weather), asserts(weatherman, will_rain(indianapolis)), contain(weather, will_rain(indianapolis))], will_rain(indianapolis)"
+"Enthymeme: The weatherman knows about the weather.   Context: All of the user's electrical devices are plugged into the outlets.
+",,,"[position_to_know(weatherman, weather), asserts(weatherman, severe_threat_through_early_afternoon_monday), contain(weather, severe_threat_through_early_afternoon_monday)], severe_threat_through_early_afternoon_monday"
+"Enthymeme: The weatherman knows about the weather.   Context: The userâ€™s patio umbrella is open outside the house.
+",,,"[position_to_know(weatherman,weather),asserts(weatherman,severe_threat_through_early_afternoon_monday),contain(weather,severe_threat_through_early_afternoon_monday)],severe_threat_through_early_afternoon_monday"
+"Enthymeme: The weatherman knows about the weather.   Context: The user lives in Lafayette.
+",,,"[position_to_know(weatherman, weather), asserts(weatherman, temperature(lafayette, 86, tomorrow)), contain(weather, temperature(lafayette, 86, tomorrow))], temperature(lafayette, 86, tomorrow)"
+"Enthymeme: The weatherman knows about the weather.   Context: The user has an appointment tomorrow at 11 A.M.
+",,,"[position_to_know(weatherman, weather), asserts(weatherman, late_morning_storms(tomorrow)), contain(weather, late_morning_storms(tomorrow))], late_morning_storms(tomorrow)"
+Enthymeme: The weatherman knows about the weather.   Context: The user lives in Delta. The user plans to go to Manti in the next hour.,,,"[position_to_know(weatherman,weather),asserts(weatherman,weather(manti,53,partly_cloudy)),contain(weather,weather(manti,53,partly_cloudy))],weather(manti,53,partly_cloudy)"

@@ -4,3 +4,4 @@ articles/
 dataset/
 images/
 test_geminy.py
+__pycache__
