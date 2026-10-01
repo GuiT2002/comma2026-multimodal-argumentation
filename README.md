@@ -1,18 +1,18 @@
-# Experimentos de argumentação multimodal
+# Multimodal argumentation experiments
 
-Executa experimentos de formalização de argumentos com DeepSeek, OpenAI e/ou Claude. Cada execução percorre as três classes de testes e, para cada caso, envia três combinações de entrada aos modelos selecionados:
+Run argument formalization experiments with DeepSeek, OpenAI, and/or Claude. Each run processes all three test classes and sends three input combinations to the selected models for each case:
 
-| Ordem | Experimento | Informações enviadas |
+| Order | Experiment | Inputs sent |
 | --- | --- | --- |
-| 1 | `without_enthymeme` | Contexto e imagem |
-| 2 | `without_context` | Entimema e imagem |
-| 3 | `without_image` | Entimema e contexto |
+| 1 | `without_enthymeme` | Context and image |
+| 2 | `without_context` | Enthymeme and image |
+| 3 | `without_image` | Enthymeme and context |
 
-O experimento sem imagem usa o prompt específico sem referências a imagens. Os outros dois usam o prompt multimodal original. Os exemplos dos esquemas de argumentação são carregados de `all_examples.txt`.
+The experiment without an image uses the dedicated prompt without image references. The other two use the original multimodal prompt. Argumentation scheme examples are loaded from `all_examples.txt`.
 
-## Instalação
+## Installation
 
-Requer Python 3.10 ou superior. Na raiz do repositório:
+Requires Python 3.10 or later. From the repository root:
 
 ```bash
 python3 -m venv .venv
@@ -20,110 +20,110 @@ source .venv/bin/activate
 python3 -m pip install -r requirements.txt
 ```
 
-As dependências são os SDKs `openai` e `anthropic`. O SDK da OpenAI também é usado para acessar a API da DeepSeek.
+The dependencies are the `openai` and `anthropic` SDKs. The OpenAI SDK is also used to access the DeepSeek API.
 
-## Dados de entrada
+## Input data
 
-Prepare exatamente três arquivos `.txt` na pasta `testes/`. Os nomes são livres; o nome sem a extensão identifica a classe e sua pasta de imagens:
+Place exactly three `.txt` files in the `tests/` directory. You can choose their names; each filename without its extension identifies the class and its image directory:
 
 ```text
-repositorio/
+repository/
 ├── main.py
 ├── requirements.txt
 ├── all_examples.txt
-├── testes/
-│   ├── classe1.txt
-│   ├── classe2.txt
-│   └── classe3.txt
+├── tests/
+│   ├── class1.txt
+│   ├── class2.txt
+│   └── class3.txt
 └── images/
-    ├── classe1/
+    ├── class1/
     │   ├── test1.png
     │   └── test2.png
-    ├── classe2/
+    ├── class2/
     │   ├── test1.png
     │   └── test2.png
-    └── classe3/
+    └── class3/
         ├── test1.png
         └── test2.png
 ```
 
-Cada TXT deve estar em UTF-8, sem cabeçalho, com um caso por linha e exatamente duas colunas separadas por um tab real:
+Each TXT file must use UTF-8, with no header, one case per line, and exactly two columns separated by a real tab:
 
 ```text
-entimema<TAB>contexto
+enthymeme<TAB>context
 ```
 
-Substitua `<TAB>` pelo caractere de tabulação; não escreva os caracteres `\t`. Para deixar um campo vazio, preserve o tab. Não inclua linhas vazias nem tabs ou quebras de linha dentro de um campo. O código mantém os entimemas e os contextos em listas separadas.
+Replace `<TAB>` with the tab character; do not write the literal characters `\t`. To leave a field empty, keep the tab. Do not include blank lines or tabs or line breaks within a field. The code keeps enthymemes and contexts in separate lists.
 
-`test1.png` corresponde à primeira linha do TXT da classe, `test2.png` à segunda, e assim por diante. A numeração reinicia em cada classe. As classes podem ter quantidades diferentes de casos, mas cada classe precisa conter ao menos um caso e cada caso precisa ter sua imagem, pois os três experimentos sempre são executados.
+`test1.png` corresponds to the first line of that class's TXT file, `test2.png` to the second line, and so on. Numbering restarts for each class. Classes may contain different numbers of cases, but each class must have at least one case and every case must have an image, since all three experiments are always run.
 
-Todos os caminhos de dados e resultados são relativos à pasta de `main.py`, independentemente do diretório de onde o comando for chamado. Os três arquivos e as imagens são verificados antes das chamadas às APIs. É necessário fornecer os dados das três classes; o programa não cria nem divide automaticamente o conjunto de testes.
+All data and output paths are relative to the directory containing `main.py`, regardless of the directory from which the command is run. All three input files and their images are checked before any API calls. You must provide the data for all three classes; the program does not create or split the dataset automatically.
 
-## Executar os testes
+## Running the experiments
 
-Selecione os provedores passando suas chaves na linha de comando. É obrigatório selecionar pelo menos um:
+Select providers by passing their API keys on the command line. At least one provider is required:
 
-| Opção | Modelo |
+| Option | Model |
 | --- | --- |
 | `--deepseek-api-key` | `deepseek-flash` |
 | `--openai-api-key` | `gpt-6.1-sol` |
 | `--claude-api-key` | `claude-sonnet-5-5` |
 
-Somente DeepSeek:
+DeepSeek only:
 
 ```bash
-python3 main.py --deepseek-api-key "SUA_CHAVE_DEEPSEEK"
+python3 main.py --deepseek-api-key "YOUR_DEEPSEEK_API_KEY"
 ```
 
-Somente OpenAI ou somente Claude:
+OpenAI only or Claude only:
 
 ```bash
-python3 main.py --openai-api-key "SUA_CHAVE_OPENAI"
-python3 main.py --claude-api-key "SUA_CHAVE_CLAUDE"
+python3 main.py --openai-api-key "YOUR_OPENAI_API_KEY"
+python3 main.py --claude-api-key "YOUR_CLAUDE_API_KEY"
 ```
 
-Os três modelos na mesma execução:
+All three models in the same run:
 
 ```bash
 python3 main.py \
-  --deepseek-api-key "SUA_CHAVE_DEEPSEEK" \
-  --openai-api-key "SUA_CHAVE_OPENAI" \
-  --claude-api-key "SUA_CHAVE_CLAUDE"
+  --deepseek-api-key "YOUR_DEEPSEEK_API_KEY" \
+  --openai-api-key "YOUR_OPENAI_API_KEY" \
+  --claude-api-key "YOUR_CLAUDE_API_KEY"
 ```
 
-Também é possível combinar quaisquer dois provedores. Somente os provedores com chave informada no comando são executados; variáveis de ambiente ou um arquivo `.env`, por si só, não os ativam. As chaves não são incluídas nos arquivos de resultados.
+You can also combine any two providers. Only providers whose keys are supplied on the command line are used; environment variables or a `.env` file alone do not enable them. API keys are not included in the output files.
 
-As três classes são descobertas automaticamente em `testes/`; não passe nomes de arquivos como argumentos. Cada caso gera três chamadas por modelo selecionado. Para consultar as opções:
+All three classes are discovered automatically in `tests/`; do not pass filenames as arguments. Each case generates three API calls per selected model. To display the available options:
 
 ```bash
 python3 main.py --help
 ```
 
-## Resultados
+## Results
 
-Ao concluir cada classe, o programa grava `results/<classe>.txt`, sobrescrevendo o resultado anterior daquela classe. Uma execução completa gera três arquivos UTF-8 tabulados, prontos para copiar e colar em uma planilha.
+After completing each class, the program writes `results/<class>.txt`, overwriting any previous output for that class. A complete run produces three UTF-8 files with tab-separated columns, ready to copy and paste into a spreadsheet.
 
-O cabeçalho começa com `Enthymeme`, `Context`, `Image` e `Expected Output`, seguidos de uma coluna por modelo selecionado. As colunas de modelos aparecem sempre na ordem DeepSeek, OpenAI e Claude, usando seus identificadores como nomes. Com os três modelos, a estrutura é:
+The header starts with `Enthymeme`, `Context`, `Image`, and `Expected Output`, followed by one column per selected model. Model columns always follow the order DeepSeek, OpenAI, and Claude, with model identifiers as column names. With all three models, the structure is:
 
 ```text
 Enthymeme<TAB>Context<TAB>Image<TAB>Expected Output<TAB>deepseek-flash<TAB>gpt-6.1-sol<TAB>claude-sonnet-5-5
 ```
 
-No arquivo gerado, os separadores são tabs reais. `Expected Output` fica sempre em branco para preenchimento manual; não é necessário fornecer um arquivo de respostas esperadas.
+The generated files contain real tab characters as separators. `Expected Output` is always left blank for manual entry; no expected-answer file is required.
 
-Cada caso ocupa três linhas consecutivas, na ordem `without_enthymeme`, `without_context` e `without_image`. O campo da modalidade omitida fica vazio. `Image` contém o caminho da imagem quando ela é enviada. Não há uma coluna adicional para o nome do experimento.
+Each case occupies three consecutive rows in this order: `without_enthymeme`, `without_context`, and `without_image`. The omitted input field is left empty. `Image` contains the image path when an image is sent. There is no additional column for the experiment name.
 
-Cada célula de resposta contém o texto retornado pelo modelo, incluindo suas tags, sem extrair apenas `<final_output>`. Tabs e quebras de linha dentro das células são substituídos por espaços para preservar uma linha da planilha por experimento.
+Each response cell contains the text returned by the model, including its tags, without extracting only `<final_output>`. Tabs and line breaks within cells are replaced with spaces to keep each experiment on a single spreadsheet row.
 
-## Erros comuns
+## Common errors
 
-- **Nenhum provedor selecionado:** informe pelo menos uma das opções de chave de API.
-- **Quantidade incorreta de classes:** mantenha exatamente três arquivos `.txt` diretamente em `testes/`.
-- **Entrada inválida:** confira os tabs reais, as duas colunas por linha e a ausência de linhas vazias.
-- **Imagem não encontrada:** confira a correspondência entre o nome do TXT, a pasta em `images/` e a numeração `test1.png`, `test2.png` etc.
-- **Dependência ausente:** ative o ambiente virtual e instale `requirements.txt`.
-- **Erro da API:** confira a chave, o acesso ao modelo e a mensagem retornada pelo provedor. A execução é interrompida; os resultados de classes já concluídas permanecem salvos. A classe interrompida não é gravada, e um arquivo antigo dessa classe, se existir, permanece inalterado.
+- **No provider selected:** supply at least one API key option.
+- **Incorrect number of classes:** keep exactly three `.txt` files directly in `tests/`.
+- **Invalid input:** check for real tabs, exactly two columns per line, and no blank lines.
+- **Image not found:** check that the TXT filename matches the directory in `images/` and that images follow the `test1.png`, `test2.png`, etc. naming convention.
+- **Missing dependency:** activate the virtual environment and install `requirements.txt`.
+- **API error:** check the key, model access, and the provider's error message. Execution stops; results for completed classes remain saved. The interrupted class is not written, and any previous output file for that class remains unchanged.
 
-Respostas vazias ou truncadas também interrompem a execução. O limite de saída do Claude é de 8192 tokens, definido por `CLAUDE_MAX_TOKENS` em `main.py`.
+Empty or truncated responses also stop execution. Claude's output limit is 8192 tokens, configured through `CLAUDE_MAX_TOKENS` in `main.py`.
 
-Documentação dos provedores: [DeepSeek](https://api-docs.deepseek.com/), [GPT-6.1 Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol) e [Claude Sonnet 5.5](https://platform.claude.com/docs/en/models/sonnet-5-5/overview).
+Provider documentation: [DeepSeek](https://api-docs.deepseek.com/), [GPT-6.1 Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol), and [Claude Sonnet 5.5](https://platform.claude.com/docs/en/models/sonnet-5-5/overview).

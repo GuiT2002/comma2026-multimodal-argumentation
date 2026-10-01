@@ -27,9 +27,9 @@ def load_tests(tests_path):
             columns = line.rstrip("\r\n").split("\t")
             if len(columns) != 2:
                 raise ValueError(
-                    f"{tests_path}, linha {line_number}: esperadas duas colunas "
-                    "separadas por um tab (entimema e contexto). "
-                    "Para omitir um campo, mantenha o tab e deixe o campo vazio."
+                    f"{tests_path}, line {line_number}: expected two columns "
+                    "separated by a tab (enthymeme and context). "
+                    "To omit a field, keep the tab and leave the field empty."
                 )
             enthymemes_list.append(columns[0])
             contexts_list.append(columns[1])
@@ -119,12 +119,12 @@ def build_prompt_without_image(examples_list, enthymeme, context):
 
 
 def load_datasets(base_dir):
-    tests_dir = base_dir / "testes"
+    tests_dir = base_dir / "tests"
     test_paths = sorted(path for path in tests_dir.glob("*.txt") if path.is_file())
     if len(test_paths) != 3:
         raise ValueError(
-            f"{tests_dir} deve conter exatamente três arquivos .txt, um por classe "
-            f"(encontrados: {len(test_paths)})."
+            f"{tests_dir} must contain exactly three .txt files, one per class "
+            f"(found: {len(test_paths)})."
         )
 
     datasets = []
@@ -132,14 +132,14 @@ def load_datasets(base_dir):
         class_name = test_path.stem
         enthymemes_list, contexts_list = load_tests(test_path)
         if not enthymemes_list:
-            raise ValueError(f"{test_path}: o arquivo da classe não contém casos de teste.")
+            raise ValueError(f"{test_path}: the class file contains no test cases.")
         image_paths = [
             base_dir / "images" / class_name / f"test{test_n}.png"
             for test_n in range(1, len(enthymemes_list) + 1)
         ]
         for image_path in image_paths:
             if not image_path.is_file():
-                raise FileNotFoundError(f"Imagem não encontrada: {image_path}")
+                raise FileNotFoundError(f"Image not found: {image_path}")
         datasets.append((class_name, enthymemes_list, contexts_list, image_paths))
     return datasets
 
@@ -185,7 +185,7 @@ def request_model(provider, model, client, prompt, image_base64):
             messages=[{"role": "user", "content": content}],
         )
         if response.stop_reason == "max_tokens":
-            raise RuntimeError(f"{model}: resposta truncada pelo limite de tokens.")
+            raise RuntimeError(f"{model}: response truncated by the token limit.")
         text = "\n".join(block.text for block in response.content if block.type == "text")
     else:
         content.append({"type": "text", "text": prompt})
@@ -199,10 +199,10 @@ def request_model(provider, model, client, prompt, image_base64):
             messages=[{"role": "user", "content": content}],
         )
         if response.choices[0].finish_reason == "length":
-            raise RuntimeError(f"{model}: resposta truncada pelo limite de tokens.")
+            raise RuntimeError(f"{model}: response truncated by the token limit.")
         text = response.choices[0].message.content
     if not text or not text.strip():
-        raise RuntimeError(f"{model}: a API não retornou uma resposta textual.")
+        raise RuntimeError(f"{model}: the API did not return a text response.")
     return text
 
 
@@ -218,7 +218,7 @@ def run_experiment(model_clients, examples_list, enthymeme, context, image_path,
         image_base64 = encode_image(image_path)
         supplied_image = (Path("images") / image_path.parent.name / image_path.name).as_posix()
 
-    # Expected Output fica vazio para preenchimento manual na planilha.
+    # Leave Expected Output empty for manual entry in the spreadsheet.
     row = [supplied_enthymeme, supplied_context, supplied_image, ""]
     for provider, model, client in model_clients:
         row.append(request_model(provider, model, client, prompt, image_base64))
@@ -241,27 +241,27 @@ def write_results(output_path, model_clients, rows):
 
 def nonempty_api_key(value):
     if not value.strip():
-        raise argparse.ArgumentTypeError("A chave de API não pode estar vazia.")
+        raise argparse.ArgumentTypeError("The API key must not be empty.")
     return value
 
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(
         description=(
-            "Executa as três classes de testes/ com os modelos selecionados pelas chaves."
+            "Run all three classes in tests/ with the models selected by their API keys."
         ),
         allow_abbrev=False,
     )
     for provider, model in MODELS.items():
         parser.add_argument(
-            f"--{provider}-api-key", type=nonempty_api_key, metavar="CHAVE",
-            help=f"Habilita {model} usando a chave fornecida.",
+            f"--{provider}-api-key", type=nonempty_api_key, metavar="KEY",
+            help=f"Enable {model} using the supplied API key.",
         )
     args = parser.parse_args(argv)
     if not any(getattr(args, f"{provider}_api_key") is not None for provider in MODELS):
         parser.error(
-            "Informe ao menos uma chave: --deepseek-api-key, --openai-api-key "
-            "ou --claude-api-key."
+            "Provide at least one API key: --deepseek-api-key, --openai-api-key "
+            "or --claude-api-key."
         )
     return args
 
@@ -280,13 +280,13 @@ def main(argv=None):
                 zip(enthymemes_list, contexts_list, image_paths), start=1
             ):
                 for experiment in EXPERIMENTS:
-                    print(f"{class_name}: caso {test_n}/{len(enthymemes_list)}, {experiment}")
+                    print(f"{class_name}: case {test_n}/{len(enthymemes_list)}, {experiment}")
                     rows.append(run_experiment(
                         model_clients, examples_list, enthymeme, context, image_path, experiment
                     ))
             output_path = BASE_DIR / "results" / f"{class_name}.txt"
             write_results(output_path, model_clients, rows)
-            print(f"Resultados salvos em {output_path}")
+            print(f"Results saved to {output_path}")
 
 
 if __name__ == "__main__":
