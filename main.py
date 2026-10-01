@@ -1,5 +1,6 @@
 import argparse
 import base64
+import csv
 from contextlib import ExitStack
 from pathlib import Path
 
@@ -22,17 +23,23 @@ def load_tests(tests_path):
     enthymemes_list = []
     contexts_list = []
 
-    with open(tests_path, "r", encoding="utf-8-sig") as tests_file:
-        for line_number, line in enumerate(tests_file, start=1):
-            columns = line.rstrip("\r\n").split("\t")
-            if len(columns) != 2:
-                raise ValueError(
-                    f"{tests_path}, line {line_number}: expected two columns "
-                    "separated by a tab (enthymeme and context). "
-                    "To omit a field, keep the tab and leave the field empty."
-                )
-            enthymemes_list.append(columns[0])
-            contexts_list.append(columns[1])
+    with open(tests_path, "r", encoding="utf-8-sig", newline="") as tests_file:
+        reader = csv.reader(tests_file, delimiter="\t", strict=True)
+        try:
+            for record_number, columns in enumerate(reader, start=1):
+                if len(columns) != 2:
+                    raise ValueError(
+                        f"{tests_path}, record {record_number}: expected two columns "
+                        "separated by a tab (enthymeme and context). "
+                        "To omit a field, keep the tab and leave the field empty."
+                    )
+                # Parse complete records before normalizing whitespace within cells.
+                enthymemes_list.append(spreadsheet_cell(columns[0]).strip())
+                contexts_list.append(spreadsheet_cell(columns[1]).strip())
+        except csv.Error as exc:
+            raise ValueError(
+                f"{tests_path}, line {reader.line_num}: invalid TSV: {exc}"
+            ) from exc
 
     return enthymemes_list, contexts_list
 
@@ -120,10 +127,10 @@ def build_prompt_without_image(examples_list, enthymeme, context):
 
 def load_datasets(base_dir):
     tests_dir = base_dir / "tests"
-    test_paths = sorted(path for path in tests_dir.glob("*.txt") if path.is_file())
+    test_paths = sorted(path for path in tests_dir.glob("*.tsv") if path.is_file())
     if len(test_paths) != 3:
         raise ValueError(
-            f"{tests_dir} must contain exactly three .txt files, one per class "
+            f"{tests_dir} must contain exactly three .tsv files, one per class "
             f"(found: {len(test_paths)})."
         )
 
