@@ -1,18 +1,18 @@
-The weather channel is in a position to know about the weather.	The user has a doctor's appointment on Friday.
-The weatherman knows about the weather.	The user lives in Philadelphia.
-The approach of hurricanes is a matter of meteorology.	The user lives in Miami.
-The weatherman knows about the weather.	The user plans to go to the gym in the next few hours.
-The weatherman knows about the weather.	The user lives in Naples.
-The weatherman knows about the weather.	The user plans on going on a trip on Saturday.
-The weatherman knows about the weather.	The user lives in London.
-The weatherman knows about the weather.	The user has an appointment in Westminster on Friday.
-The weatherman knows about the weather.	The user plans to go to a party in Green Bay around midnight. 
-The weatherman knows about the weather.	The user lives in Fremont.
-The weatherman knows about the weather.	The user lives in Indiana.
-The weatherman knows about the weather.	The user lives in Minneapolis. The user plans to go for a walk at night within the next hour.
-The weatherman knows about the weather.	The user lives in Indianapolis. The user has a doctor's appointment in the next hour.
-The weatherman knows about the weather.	All of the user's electrical devices are plugged into the outlets.
-The weatherman knows about the weather.	The user’s patio umbrella is open outside the house.
-The weatherman knows about the weather.	The user lives in Lafayette.
-The weatherman knows about the weather.	The user has an appointment tomorrow at 11 A.M.
-The weatherman knows about the weather.	The user lives in Delta. The user plans to go to Manti in the next hour.
+The weather channel is in a position to know about the weather. The user has a doctor's appointment on Friday.
+The weatherman knows about the weather. The user lives in Philadelphia.
+The approach of hurricanes is a matter of meteorology.  The user lives in Miami.
+The weatherman knows about the weather. The user plans to go to the gym in the next few hours.
+The weatherman knows about the weather. The user lives in Naples.
+The weatherman knows about the weather. The user plans on going on a trip on Saturday.
+The weatherman knows about the weather. The user lives in London.
+The weatherman knows about the weather. The user has an appointment in Westminster on Friday.
+The weatherman knows about the weather. The user plans to go to a party in Green Bay around midnight. 
+The weatherman knows about the weather. The user lives in Fremont.
+The weatherman knows about the weather. The user lives in Indiana.
+The weatherman knows about the weather. The user lives in Minneapolis. The user plans to go for a walk at night within the next hour.
+The weatherman knows about the weather. The user lives in Indianapolis. The user has a doctor's appointment in the next hour.
+The weatherman knows about the weather. All of the user's electrical devices are plugged into the outlets.
+The weatherman knows about the weather. The user’s patio umbrella is open outside the house.
+The weatherman knows about the weather. The user lives in Lafayette.
+The weatherman knows about the weather. The user has an appointment tomorrow at 11 A.M.
+The weatherman knows about the weather. The user lives in Delta. The user plans to go to Manti in the next hour.

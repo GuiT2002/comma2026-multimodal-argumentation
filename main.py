@@ -1,6 +1,7 @@
 import argparse
 import base64
 import csv
+import re
 from contextlib import ExitStack
 from pathlib import Path
 
@@ -11,7 +12,12 @@ MODELS = {
     "claude": "claude-sonnet-5-5",
 }
 CLAUDE_MAX_TOKENS = 8192
-EXPERIMENTS = ("without_enthymeme", "without_context", "without_image")
+EXPERIMENTS = (
+    "without_enthymeme",
+    "without_context",
+    "without_image",
+    "all_inputs",
+)
 
 
 def encode_image(image_path):
@@ -217,32 +223,52 @@ def run_experiment(model_clients, examples_list, enthymeme, context, image_path,
     supplied_enthymeme = enthymeme if experiment != "without_enthymeme" else ""
     supplied_context = context if experiment != "without_context" else ""
     image_base64 = None
-    supplied_image = ""
     if experiment == "without_image":
         prompt = build_prompt_without_image(examples_list, supplied_enthymeme, supplied_context)
     else:
         prompt = build_prompt(examples_list, supplied_enthymeme, supplied_context)
         image_base64 = encode_image(image_path)
-        supplied_image = (Path("images") / image_path.parent.name / image_path.name).as_posix()
 
-    # Leave Expected Output empty for manual entry in the spreadsheet.
-    row = [supplied_enthymeme, supplied_context, supplied_image, ""]
-    for provider, model, client in model_clients:
-        row.append(request_model(provider, model, client, prompt, image_base64))
-    return row
+    return [
+        request_model(provider, model, client, prompt, image_base64)
+        for provider, model, client in model_clients
+    ]
 
 
 def spreadsheet_cell(value):
     return value.replace("\r\n", " ").replace("\r", " ").replace("\n", " ").replace("\t", " ")
 
 
+def extract_final_output(response):
+    # Accept the closing-tag variants already present in model responses.
+    match = re.search(
+        r"<final_output>(.*?)<(?:/?final_output_f|/final_output)>",
+        response,
+        flags=re.DOTALL,
+    )
+    if match is None or not match.group(1).strip():
+        raise ValueError("Model response must contain a nonempty final_output block.")
+    return match.group(1).strip()
+
+
 def write_results(output_path, model_clients, rows):
-    output_path.parent.mkdir(parents=True, exist_ok=True)
     header = ["Enthymeme", "Context", "Image", "Expected Output"]
-    header.extend(model for _, model, _ in model_clients)
+    header.extend(
+        f"{model}__{experiment}"
+        for _, model, _ in model_clients
+        for experiment in EXPERIMENTS
+    )
+    if any(len(row) != len(header) for row in rows):
+        raise ValueError("Each result row must contain one response per model and experiment.")
+    # Validate all responses before opening the file to preserve existing results on error.
+    output_rows = [
+        list(row[:4]) + [extract_final_output(response) for response in row[4:]]
+        for row in rows
+    ]
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8", newline="") as output_file:
         output_file.write("\t".join(header) + "\n")
-        for row in rows:
+        for row in output_rows:
             output_file.write("\t".join(spreadsheet_cell(value) for value in row) + "\n")
 
 
@@ -286,11 +312,20 @@ def main(argv=None):
             for test_n, (enthymeme, context, image_path) in enumerate(
                 zip(enthymemes_list, contexts_list, image_paths), start=1
             ):
+                responses = {}
                 for experiment in EXPERIMENTS:
                     print(f"{class_name}: case {test_n}/{len(enthymemes_list)}, {experiment}")
-                    rows.append(run_experiment(
+                    responses[experiment] = run_experiment(
                         model_clients, examples_list, enthymeme, context, image_path, experiment
-                    ))
+                    )
+                # Keep the original case and leave Expected Output for manual entry.
+                row = [enthymeme, context, image_path.relative_to(BASE_DIR).as_posix(), ""]
+                row.extend(
+                    responses[experiment][model_index]
+                    for model_index in range(len(model_clients))
+                    for experiment in EXPERIMENTS
+                )
+                rows.append(row)
             output_path = BASE_DIR / "results" / f"{class_name}.txt"
             write_results(output_path, model_clients, rows)
             print(f"Results saved to {output_path}")

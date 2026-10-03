@@ -2,6 +2,6 @@ venv/
 articles/
 .env
 dataset/
-images/
 test_geminy.py
 __pycache__
+results/
