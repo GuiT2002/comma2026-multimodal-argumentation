@@ -4,4 +4,4 @@ articles/
 dataset/
 test_geminy.py
 __pycache__
-results/
+*.zip

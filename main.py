@@ -11,6 +11,11 @@ MODELS = {
     "openai": "gpt-6.1-sol",
     "claude": "claude-sonnet-5-5",
 }
+RESULT_DIRECTORIES = {
+    "deepseek": "deepseek-flash",
+    "openai": "gpt-6.1",
+    "claude": "claude-sonnet",
+}
 CLAUDE_MAX_TOKENS = 8192
 EXPERIMENTS = (
     "without_enthymeme",
@@ -308,7 +313,7 @@ def main(argv=None):
     with ExitStack() as stack:
         model_clients = create_model_clients(args, stack)
         for class_name, enthymemes_list, contexts_list, image_paths in datasets:
-            rows = []
+            rows_by_model = [[] for _ in model_clients]
             for test_n, (enthymeme, context, image_path) in enumerate(
                 zip(enthymemes_list, contexts_list, image_paths), start=1
             ):
@@ -320,15 +325,18 @@ def main(argv=None):
                     )
                 # Keep the original case and leave Expected Output for manual entry.
                 row = [enthymeme, context, image_path.relative_to(BASE_DIR).as_posix(), ""]
-                row.extend(
-                    responses[experiment][model_index]
-                    for model_index in range(len(model_clients))
-                    for experiment in EXPERIMENTS
+                for model_index, rows in enumerate(rows_by_model):
+                    rows.append(row + [
+                        responses[experiment][model_index]
+                        for experiment in EXPERIMENTS
+                    ])
+            for model_client, rows in zip(model_clients, rows_by_model):
+                provider, _, _ = model_client
+                output_path = (
+                    BASE_DIR / "results" / RESULT_DIRECTORIES[provider] / f"{class_name}.txt"
                 )
-                rows.append(row)
-            output_path = BASE_DIR / "results" / f"{class_name}.txt"
-            write_results(output_path, model_clients, rows)
-            print(f"Results saved to {output_path}")
+                write_results(output_path, [model_client], rows)
+                print(f"Results saved to {output_path}")
 
 
 if __name__ == "__main__":
